@@ -13,16 +13,15 @@ defmodule DetectGithubUserProgrammingLanguages.CLI do
   Иначе `argv` это github username, возвращаем его
   """
   def parse_args(argv) do
-    parse = OptionParser.parse(argv, switches: [help: :boolean], aliases: [h: :help])
-
-    case parse do
-      { [ help: true ], _, _ }
-        -> :help
-
-      { _, [ user ], _ }
-        -> user
-
-      _ -> :help
-    end
+    OptionParser.parse(argv, switches: [help: :boolean], aliases: [h: :help])
+      # |> elem(1)
+      |> args_to_internal_representation()
   end
+
+  def args_to_internal_representation({ [ help: true ], _, _ }), do: :help
+
+  def args_to_internal_representation({ _, [ user ], _ }), do: user
+
+  # unexpected argument case
+  def args_to_internal_representation(_), do: :help
 end
