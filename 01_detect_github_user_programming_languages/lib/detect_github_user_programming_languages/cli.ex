@@ -4,7 +4,20 @@ defmodule DetectGithubUserProgrammingLanguages.CLI do
   """
 
   def run(argv) do
-    parse_args(argv)
+    argv
+      |> parse_args
+      |> process
+  end
+
+  def process(:help) do
+    IO.puts """
+    usage: detect_github_user_programming_languages spajic
+    """
+    System.halt(0)
+  end
+
+  def process(username) do
+    DetectGithubUserProgrammingLanguages.Github.fetch(username)
   end
 
   @doc """
@@ -20,7 +33,7 @@ defmodule DetectGithubUserProgrammingLanguages.CLI do
 
   def args_to_internal_representation({ [ help: true ], _, _ }), do: :help
 
-  def args_to_internal_representation({ _, [ user ], _ }), do: user
+  def args_to_internal_representation({ _, [ username ], _ }), do: username
 
   # unexpected argument case
   def args_to_internal_representation(_), do: :help
