@@ -22,3 +22,4 @@ erl_crash.dump
 # Ignore package tarball (built via "mix hex.build").
 detect_github_user_programming_languages-*.tar
 
+detect_github_user_programming_languages
