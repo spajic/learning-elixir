@@ -2,8 +2,7 @@ defmodule DetectGithubUserProgrammingLanguages.CLI do
   @moduledoc """
   Работа с командной строкой
   """
-
-  def run(argv) do
+  def main(argv) do
     argv
       |> parse_args
       |> process
@@ -20,12 +19,14 @@ defmodule DetectGithubUserProgrammingLanguages.CLI do
     DetectGithubUserProgrammingLanguages.Github.fetch(username)
       |> decode_response()
       |> extract_languages()
+      |> IO.puts()
   end
 
   def extract_languages(repos) do
     Enum.map(repos, fn repo -> repo["language"] end)
       |> Enum.reject(fn language -> language == nil end)
       |> Enum.uniq()
+      |> Enum.join(", ")
   end
 
   def decode_response({:ok, body}), do: body
