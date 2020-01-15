@@ -19,6 +19,13 @@ defmodule DetectGithubUserProgrammingLanguages.CLI do
   def process(username) do
     DetectGithubUserProgrammingLanguages.Github.fetch(username)
       |> decode_response()
+      |> extract_languages()
+  end
+
+  def extract_languages(repos) do
+    Enum.map(repos, fn repo -> repo["language"] end)
+      |> Enum.reject(fn language -> language == nil end)
+      |> Enum.uniq()
   end
 
   def decode_response({:ok, body}), do: body
