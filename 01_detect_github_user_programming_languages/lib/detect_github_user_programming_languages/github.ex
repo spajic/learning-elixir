@@ -12,7 +12,10 @@ defmodule DetectGithubUserProgrammingLanguages.Github do
   end
 
   def handle_response({ :ok, %{status_code: 200, body: body}}) do
-    { :ok, body }
+    {
+      :ok,
+      body |> Poison.Parser.parse!()
+    }
   end
 
   def handle_response({_, %{status_code: _, body: body}}) do
