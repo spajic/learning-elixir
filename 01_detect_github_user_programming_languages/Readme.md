@@ -13,4 +13,6 @@
 ```bash
 mix escript.build
 ./detect_github_user_programming_languages spajic
+
+C++, Python, Ruby, JavaScript, Elixir, Go
 ```
