@@ -7,3 +7,9 @@
 Доки тут: https://developer.github.com/v3/users/
 
 В качестве http клиента можно взять `httpoison` (попроще), или `mint` (`api` посложнее, но должен быть побыстрее).
+
+## Сборка и использование
+```bash
+mix escript.build
+./detect_github_user_programming_languages spajic
+```
