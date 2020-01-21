@@ -1,3 +1,4 @@
+# Implementation
 defmodule MyRedis.Server do
   use GenServer
 

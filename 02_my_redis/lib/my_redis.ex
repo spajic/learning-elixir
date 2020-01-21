@@ -1,18 +1,24 @@
+# API of MyRedis
 defmodule MyRedis do
-  @moduledoc """
-  Documentation for MyRedis.
-  """
+  @server MyRedis.Server
 
-  @doc """
-  Hello world.
+  def start_link() do
+    GenServer.start_link(@server, %{}, name: @server)
+  end
 
-  ## Examples
+  def set(key, value) do
+    GenServer.call(@server, {:set, key, value})
+  end
 
-      iex> MyRedis.hello()
-      :world
+  def get(key) do
+    GenServer.call(@server, {:get, key})
+  end
 
-  """
-  def hello do
-    :world
+  def del(key) do
+    GenServer.call(@server, {:del, key})
+  end
+
+  def flushdb() do
+    GenServer.call(@server, :flushdb)
   end
 end
