@@ -1,28 +1,29 @@
-# Implementation
+# Server
 defmodule MyRedis.Server do
   use GenServer
+  alias MyRedis.Logic
 
   def init(_) do
     { :ok, %{} }
   end
 
   def handle_call({:set, key, value}, _from, state) do
-    state_with_new_key = Map.put_new(state, key, value)
-    state_with_updated_key = %{state_with_new_key | key => value}
-    { :reply, state_with_updated_key, state_with_updated_key }
+    { reply_value, new_state } = Logic.set(key, value, state)
+    { :reply, reply_value, new_state }
   end
 
   def handle_call({:get, key}, _from, state) do
-    { :reply, state[key], state }
+    { reply_value, new_state } = Logic.get(key, state)
+    { :reply, reply_value, new_state }
   end
 
   def handle_call({:del, key}, _from, state) do
-    new_state = Map.delete(state, key)
-    { :reply, new_state, new_state }
+    { reply_value, new_state } = Logic.del(key, state)
+    { :reply, reply_value, new_state }
   end
 
   def handle_call(:flushdb, _from, _state) do
-    new_state = %{}
-    { :reply, new_state, new_state }
+    { reply_value, new_state } = Logic.flushdb()
+    { :reply, reply_value, new_state }
   end
 end
