@@ -15,6 +15,10 @@ defmodule MyRedis.Logic do
   end
 
   def flushdb() do
-    { nil, %{} }
+    { "DB FLUSHED!", %{} }
+  end
+
+  def inspect(state) do
+    { Enum.map_join(state, "; ", fn {key, val} -> ~s{"#{key}":"#{val}"} end), state }
   end
 end

@@ -26,4 +26,9 @@ defmodule MyRedis.Server do
     { reply_value, new_state } = Logic.flushdb()
     { :reply, reply_value, new_state }
   end
+
+  def handle_call(:inspect, _from, state) do
+    { reply_value, new_state } = Logic.inspect(state)
+    { :reply, reply_value, new_state }
+  end
 end
