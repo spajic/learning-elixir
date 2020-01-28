@@ -17,6 +17,8 @@ defmodule Rabbit.Producer do
 
   defp exec_command(["push", q_name, message]) do
     "push to #{q_name}: '#{message}'"
+    Rabbit.QManager.push_msg_to_q(q_name, message)
+    "Message published"
   end
 
   defp exec_command(_) do

@@ -7,6 +7,8 @@ defmodule Rabbit.Application do
 
   def start(_type, _args) do
     children = [
+      {Rabbit.Manager, 4040},
+      Rabbit.QManager,
       # Starts a worker by calling: Rabbit.Worker.start_link(arg)
       # {Rabbit.Worker, arg}
     ]
