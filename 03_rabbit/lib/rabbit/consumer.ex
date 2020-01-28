@@ -3,6 +3,11 @@ defmodule Rabbit.Consumer do
   require Logger
   alias Rabbit.Utils
 
+  def receive_msg(pid, msg) do
+    Logger.info("Receiving msg #{msg} in consumer #{inspect(pid)}")
+    GenServer.call(pid, {:new_message, msg})
+  end
+
   @impl true
   def init({client_socket, q_name}) do
     Logger.info("Starting consumer for q #{q_name}")

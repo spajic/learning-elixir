@@ -32,10 +32,10 @@ defmodule Rabbit.Q do
   def handle_call({:push_msg, msg}, _from, state) do
     Logger.info("Pushing msg #{msg} to q #{state[:name]}")
 
-    new_state = Map.put(state, :msgs, state[:msgs] ++ [msg])
+    state_with_new_msg = Map.put(state, :msgs, state[:msgs] ++ [msg])
 
     # TODO: вынести в callback
-    # state = deliver_msgs(state)
+    new_state = deliver_msgs(state_with_new_msg, state[:consumers])
 
     {:reply, :ok, new_state}
   end
@@ -60,13 +60,19 @@ defmodule Rabbit.Q do
     {:reply, :ok, state}
   end
 
-  defp deliver_msgs(state) do
-    Logger.info("Delivering msgs from q #{state[:name]}")
+  defp deliver_msgs(state, []) do
+    Logger.info("No consumers yet, do nothing")
 
+    state
+  end
+
+  defp deliver_msgs(state, consumers) do
+    Logger.info("Delivering msgs from q '#{state[:name]}'")
+    Logger.info("msgs: #{inspect(state[:msgs])}")
     send_msg_to_all_consumers = fn(msg) ->
       Enum.each(
-        state[:consumers],
-        fn (consumer) -> GenServer.call(consumer, {:new_message, msg}) end
+        consumers,
+        fn (consumer) -> Rabbit.Consumer.receive_msg(consumer, msg) end
       )
     end
 
