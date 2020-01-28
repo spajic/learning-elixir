@@ -28,19 +28,19 @@ defmodule Rabbit.Q do
   def handle_call({:push_msg, msg}, _from, state) do
     Logger.info("Pushing msg #{msg} to q #{state[:name]}")
 
-    Map.put(state, :msgs, [state[:msgs] | msg])
+    new_state = Map.put(state, :msgs, state[:msgs] ++ [msg])
 
     # TODO: вынести в callback
     # state = deliver_msgs(state)
 
-    {:reply, :ok, state}
+    {:reply, :ok, new_state}
   end
 
   @impl true
   def handle_call(:log_state, _from, state) do
     Logger.info("Logging state of Q #{state[:name]}")
-    Logger.info("msgs: #{state[:msgs]}")
-    Logger.info("consumers: #{state[:consumers]}")
+    Logger.info("msgs: #{inspect(state[:msgs])}")
+    Logger.info("consumers: #{inspect(state[:consumers])}")
 
     {:reply, :ok, state}
   end
