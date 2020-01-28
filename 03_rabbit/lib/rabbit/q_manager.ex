@@ -21,6 +21,10 @@ defmodule Rabbit.QManager do
     GenServer.call(@server, :log_state)
   end
 
+  def log_all_qs() do
+    GenServer.call(@server, :log_all_qs)
+  end
+
   # Implementation
   @impl true
   def init(_) do
@@ -49,8 +53,17 @@ defmodule Rabbit.QManager do
   end
 
   @impl true
-  def handle_call(:log_state, _from_consumer, state) do
+  def handle_call(:log_state, _from, state) do
     Logger.info("QManager state: #{inspect(state)}")
+
+    {:reply, :ok, state}
+  end
+
+  @impl true
+  def handle_call(:log_all_qs, _from, state) do
+    Logger.info("Log all qs")
+    Map.values(state)
+      |> Enum.each(fn (pid) -> Rabbit.Q.log_state(pid) end)
 
     {:reply, :ok, state}
   end

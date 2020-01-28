@@ -12,6 +12,10 @@ defmodule Rabbit.Q do
     GenServer.call(pid, {:push_msg, msg})
   end
 
+  def log_state(pid) do
+    GenServer.call(pid, :log_state)
+  end
+
   # Implementation
   @impl true
   def init(name) do
@@ -28,6 +32,15 @@ defmodule Rabbit.Q do
 
     # TODO: вынести в callback
     # state = deliver_msgs(state)
+
+    {:reply, :ok, state}
+  end
+
+  @impl true
+  def handle_call(:log_state, _from, state) do
+    Logger.info("Logging state of Q #{state[:name]}")
+    Logger.info("msgs: #{state[:msgs]}")
+    Logger.info("consumers: #{state[:consumers]}")
 
     {:reply, :ok, state}
   end
