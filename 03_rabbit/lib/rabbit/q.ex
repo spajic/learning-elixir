@@ -12,6 +12,10 @@ defmodule Rabbit.Q do
     GenServer.call(pid, {:push_msg, msg})
   end
 
+  def add_consumer(pid, consumer_pid) do
+    GenServer.call(pid, {:add_consumer, consumer_pid})
+  end
+
   def log_state(pid) do
     GenServer.call(pid, :log_state)
   end
@@ -32,6 +36,17 @@ defmodule Rabbit.Q do
 
     # TODO: вынести в callback
     # state = deliver_msgs(state)
+
+    {:reply, :ok, new_state}
+  end
+
+  @impl true
+  def handle_call({:add_consumer, consumer_pid}, _from, state) do
+    Logger.info("Adding consumer #{inspect(consumer_pid)} to q #{state[:name]}")
+
+    new_state = Map.put(state, :consumers, state[:consumers] ++ [consumer_pid])
+
+    # TODO: рассылать сообщения и после добавления consumer
 
     {:reply, :ok, new_state}
   end

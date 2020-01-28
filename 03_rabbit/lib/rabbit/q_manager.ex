@@ -14,7 +14,7 @@ defmodule Rabbit.QManager do
   end
 
   def add_consumer_to_q(q_name, from_consumer) do
-    GenServer.call(@server, {:add_consumer_to_q, q_name}, from_consumer)
+    GenServer.call(@server, {:add_consumer_to_q, q_name, from_consumer})
   end
 
   def log_state() do
@@ -45,11 +45,14 @@ defmodule Rabbit.QManager do
   end
 
   @impl true
-  def handle_call({:add_consumer_to_q, q_name}, from_consumer, state) do
-    Logger.info("QManager adding consumer #{from_consumer} to #{q_name}")
+  def handle_call({:add_consumer_to_q, q_name, from_consumer}, _from, state) do
+    Logger.info("QManager adding consumer #{inspect(from_consumer)} to #{q_name}")
 
-    q = state[q_name]
-    q.add_consumer(from_consumer)
+    q_pid = state[q_name]
+    Logger.info("Gonna add consumer to q #{q_name} with pid #{inspect(q_pid)}")
+    Rabbit.Q.add_consumer(q_pid, from_consumer)
+
+    {:reply, :ok, state}
   end
 
   @impl true

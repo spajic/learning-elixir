@@ -22,10 +22,10 @@ defmodule Rabbit.HelloAcceptor do
     Task.async(fn -> Rabbit.Producer.handle_command(client_socket) end)
   end
 
-  defp exec_command(client_socket, ["hello", "consumer"]) do
-    Logger.info("Consumer registered")
-    Utils.write_line(client_socket, "Consumer registered")
-    {:ok, _pid} = GenServer.start_link(Rabbit.Consumer, client_socket)
+  defp exec_command(client_socket, ["hello", "consumer", q_name]) do
+    Logger.info("Registering consumer")
+    Utils.write_line(client_socket, "Registering consumer")
+    {:ok, _pid} = GenServer.start_link(Rabbit.Consumer, {client_socket, q_name})
   end
 
   defp exec_command(client_socket, _) do
