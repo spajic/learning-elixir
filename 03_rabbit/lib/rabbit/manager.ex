@@ -16,7 +16,9 @@ defmodule Rabbit.Manager do
   end
 
   def listen_socket(port) do
-    {:ok, socket} = :gen_tcp.listen(port, [:binary, packet: :line, active: false, reuseaddr: true])
+    {:ok, socket} =
+      :gen_tcp.listen(port, [:binary, packet: :line, active: false, reuseaddr: true])
+
     Logger.info("listening socket on port #{port}")
     loop_acceptor(socket)
   end

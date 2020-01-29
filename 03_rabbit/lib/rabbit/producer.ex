@@ -6,7 +6,8 @@ defmodule Rabbit.Producer do
   def handle_command(client_socket) do
     Logger.info("Handle command in producer")
 
-    response = Utils.read_line(client_socket)
+    response =
+      Utils.read_line(client_socket)
       |> Utils.parse_command()
       |> exec_command
 

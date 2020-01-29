@@ -69,10 +69,11 @@ defmodule Rabbit.Q do
   defp deliver_msgs(state, consumers) do
     Logger.info("Delivering msgs from q '#{state[:name]}'")
     Logger.info("msgs: #{inspect(state[:msgs])}")
-    send_msg_to_all_consumers = fn(msg) ->
+
+    send_msg_to_all_consumers = fn msg ->
       Enum.each(
         consumers,
-        fn (consumer) -> Rabbit.Consumer.receive_msg(consumer, msg) end
+        fn consumer -> Rabbit.Consumer.receive_msg(consumer, msg) end
       )
     end
 

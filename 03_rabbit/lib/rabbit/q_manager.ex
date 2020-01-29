@@ -65,8 +65,9 @@ defmodule Rabbit.QManager do
   @impl true
   def handle_call(:log_all_qs, _from, state) do
     Logger.info("Log all qs")
+
     Map.values(state)
-      |> Enum.each(fn (pid) -> Rabbit.Q.log_state(pid) end)
+    |> Enum.each(fn pid -> Rabbit.Q.log_state(pid) end)
 
     {:reply, :ok, state}
   end
